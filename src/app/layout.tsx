@@ -16,8 +16,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AgentPay",
+  title: {
+    default: "AgentPay",
+    template: "%s — AgentPay",
+  },
   description: "Machine-to-machine payment protocol on Stellar",
+  applicationName: "AgentPay",
+  authors: [{ name: "AgentPay" }],
+  openGraph: {
+    title: "AgentPay",
+    description: "Pay-per-request billing for AI agents and APIs on Stellar.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "AgentPay",
+    description: "Pay-per-request billing for AI agents and APIs on Stellar.",
+  },
 };
 
 export default function RootLayout({
