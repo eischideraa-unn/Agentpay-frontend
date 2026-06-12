@@ -6,7 +6,7 @@ describe("Header", () => {
     render(<Header />);
     const nav = screen.getByRole("navigation", { name: /main navigation/i });
     expect(nav).toBeInTheDocument();
-    for (const label of ["Home", "Services", "Usage", "Agents", "Admin"]) {
+    for (const label of ["Home", "Services", "Usage", "Agents", "Search", "Admin"]) {
       expect(screen.getByRole("link", { name: label })).toBeInTheDocument();
     }
   });
