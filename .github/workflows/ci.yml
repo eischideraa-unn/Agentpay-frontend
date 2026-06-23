@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
 
       - name: Install dependencies
@@ -69,9 +69,16 @@ jobs:
               `| Lines | ${t.lines.pct.toFixed(1)}% |`,
             ].join('\n');
 
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body,
-            });
+            try {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body,
+              });
+            } catch (err) {
+              // Fork PRs lack write access to the upstream repo — log and continue
+              // rather than failing the entire job.
+              console.warn(`Could not post coverage comment (status ${err.status ?? 'unknown'}): ${err.message}`);
+            }
+
