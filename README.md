@@ -68,6 +68,10 @@ A baseline security header set (CSP, `X-Frame-Options: DENY`, `Referrer-Policy`,
 
 The `/events` page renders server-supplied JSON payloads. Each payload is serialised through `safeStringify` (`src/lib/format.ts`) with a hard cap (`EVENT_PAYLOAD_MAX_CHARS`, default 5,000 chars) and a visible `…(truncated)` marker. Circular references, `BigInt`, functions, and malformed timestamps are replaced with safe sentinels so a bad payload can't crash the page.
 
+## Accessibility
+
+AgentPay respects `prefers-reduced-motion: reduce` globally. Continuous loading animations such as spinner rotation and skeleton pulsing are disabled for users who request reduced motion, while the spinner keeps its `role="status"` live region and screen-reader loading label.
+
 ## Commands
 
 | Command | Description |
