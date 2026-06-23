@@ -139,6 +139,16 @@ The `/services` page now uses server-driven pagination with the shared `Spinner`
 - If the backend clamps an out-of-range request, the UI follows the server-provided `page` and `pageCount` so the visible indicator stays in sync.
 - Service rows link through to `/services/:serviceId` using encoded IDs.
 
+## Agents directory paging
+
+The `/agents` page lists every agent identity seen by the backend, paginated with the same `Spinner`, `EmptyState`, and `Pagination` primitives used by the services page.
+
+- A summary line (`X unique agent(s) seen across Y service(s)`) is loaded once from `GET /api/v1/stats` and shown above the directory. If that request fails the list still renders normally.
+- Directory rows are fetched from `GET /api/v1/agents?page=N&limit=25`. The backend may return the array under either `agents` or `items`.
+- Each row is a `<Link>` to `/agents/:agent` with the identifier fully `encodeURIComponent`-encoded, so agents with slashes or other special characters route correctly.
+- `Pagination` hides itself automatically when `pageCount ≤ 1`, so no pagination bar appears for a single-page result.
+- Backend errors are surfaced as a `role="alert"` paragraph; the pagination bar is suppressed while an error is shown.
+
 ## Commands
 
 | Command | Description |
