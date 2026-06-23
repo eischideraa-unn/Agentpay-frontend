@@ -325,13 +325,16 @@ describe("apiFetch", () => {
     );
 
     const pending = apiFetch("/api/v1/slow", { timeoutMs: 50 });
+    const assertion = pending.catch((error) => {
+      expect(error).toBeInstanceOf(ApiTimeoutError);
+      expect(error).toMatchObject({
+        message: "request timed out after 50ms",
+        timeoutMs: 50,
+      });
+    });
     await jest.advanceTimersByTimeAsync(50);
 
-    await expect(pending).rejects.toBeInstanceOf(ApiTimeoutError);
-    await expect(pending).rejects.toMatchObject({
-      message: "request timed out after 50ms",
-      timeoutMs: 50,
-    });
+    await assertion;
   });
 
   it("uses the default timeout when timeoutMs is omitted", async () => {
@@ -352,12 +355,16 @@ describe("apiFetch", () => {
     );
 
     const pending = apiFetch("/api/v1/slow");
+    const assertion = pending.catch((error) => {
+      expect(error).toBeInstanceOf(ApiTimeoutError);
+      expect(error).toMatchObject({
+        message: "request timed out after 10000ms",
+        timeoutMs: 10_000,
+      });
+    });
     await jest.advanceTimersByTimeAsync(10_000);
 
-    await expect(pending).rejects.toMatchObject({
-      message: "request timed out after 10000ms",
-      timeoutMs: 10_000,
-    });
+    await assertion;
   });
 
   it("propagates caller aborts through the composed signal", async () => {
