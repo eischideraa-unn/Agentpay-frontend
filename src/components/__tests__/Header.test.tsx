@@ -81,6 +81,18 @@ describe("Header", () => {
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
 
+  it("closes the menu when focus leaves the secondary menu", () => {
+    mockPathname.mockReturnValue("/");
+    render(<Header />);
+    fireEvent.click(screen.getByRole("button", { name: /more/i }));
+
+    fireEvent.blur(screen.getByRole("menu"), {
+      relatedTarget: document.body,
+    });
+
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+  });
+
   it("preserves focus-visible ring classes on links", () => {
     mockPathname.mockReturnValue("/");
     render(<Header />);
