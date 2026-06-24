@@ -139,6 +139,9 @@ The `/events` page renders server-supplied JSON payloads. Each payload is serial
 
 ## Anti-FOUC theming
 
+See also: `docs/theming.md` for the full theme system, anti-FOUC contract, and token architecture.
+
+
 To prevent a flash of the wrong colour scheme (FOUC) when a user has chosen dark mode, a tiny blocking inline `<script>` is injected into `<head>` in `src/app/layout.tsx` **before the body renders**:
 
 1. It reads `localStorage.getItem("agentpay.theme")` (the key is `THEME_STORAGE_KEY` exported from `src/lib/theme.ts` — single source of truth, no key drift).
