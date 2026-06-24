@@ -237,6 +237,10 @@ When rendering links:
 
 The `/events` page renders server-supplied JSON payloads. Each payload is serialised through `safeStringify` (`src/lib/format.ts`) with a hard cap (`EVENT_PAYLOAD_MAX_CHARS`, default 5,000 chars) and a visible `…(truncated)` marker. Circular references, `BigInt`, functions, and malformed timestamps are replaced with safe sentinels so a bad payload can't crash the page.
 
+## Changelog empty state
+
+The `/changelog` page keeps using `useApi("/api/v1/changelog")` for loading release notes. When the backend returns `{ entries: [] }`, it renders the shared `EmptyState` component with a clear "No changelog entries yet" message instead of an empty list. This branch is constant-time and adds no extra network calls.
+
 ## Formatting conventions
 
 The frontend formats currency (Stroops / XLM) consistently using the helper `formatStroops` (located in `src/lib/format.ts`):
