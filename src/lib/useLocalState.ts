@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from "react";
 
-/**
- * useState backed by window.localStorage. SSR-safe — initial state is
- * the fallback until the hydration effect runs.
- */
 export function useLocalState<T>(
   key: string,
-  initial: T
+  initial: T,
 ): [T, (next: T) => void] {
   const [value, setValue] = useState<T>(initial);
 
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(key);
-      if (raw !== null) setValue(JSON.parse(raw) as T);
+      if (raw !== null) {
+        // localStorage is only available after mount; hydrate persisted state once.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setValue(JSON.parse(raw) as T);
+      }
     } catch {
       /* ignore */
     }
@@ -26,7 +26,7 @@ export function useLocalState<T>(
     try {
       window.localStorage.setItem(key, JSON.stringify(next));
     } catch {
-      /* ignore */
+      /* ignore quota errors */
     }
   };
 

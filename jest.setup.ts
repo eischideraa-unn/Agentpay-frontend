@@ -8,10 +8,12 @@ if (typeof global.Response === "undefined") {
   class ResponsePolyfill {
     body: string;
     status: number;
+    statusText: string;
     constructor(body?: BodyInit | null, init?: ResponseInit) {
       this.body =
         typeof body === "string" ? body : body == null ? "" : String(body);
       this.status = init?.status ?? 200;
+      this.statusText = init?.statusText ?? "";
     }
     get ok() {
       return this.status >= 200 && this.status < 300;
@@ -23,3 +25,14 @@ if (typeof global.Response === "undefined") {
   (global as unknown as { Response: typeof ResponsePolyfill }).Response =
     ResponsePolyfill as unknown as typeof global.Response;
 }
+
+jest.mock("next/font/google", () => ({
+  Geist: () => ({
+    variable: "--font-geist-sans",
+    style: { fontFamily: "Geist" },
+  }),
+  Geist_Mono: () => ({
+    variable: "--font-geist-mono",
+    style: { fontFamily: "Geist Mono" },
+  }),
+}));

@@ -25,15 +25,21 @@
   }
 }
 
-/* Class-based override applied by the pre-paint script and ThemeToggle. */
-html.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
 
-html.light {
-  --background: #ffffff;
-  --foreground: #171717;
+  .animate-spin,
+  .animate-pulse {
+    animation: none !important;
+  }
+
+  .animate-pulse {
+    opacity: 0.75;
+  }
 }
 
 body {
