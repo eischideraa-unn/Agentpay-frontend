@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Tooltip } from "../Tooltip";
 
 const renderTooltip = () =>
@@ -167,7 +167,7 @@ describe("Tooltip", () => {
       };
     };
 
-    it("uses default placement when there is sufficient space above", () => {
+    it("uses default placement when there is sufficient space above", async () => {
       mockMeasurements(
         { top: 100, left: 200, width: 50, height: 20 },
         { width: 80, height: 30 }
@@ -176,16 +176,18 @@ describe("Tooltip", () => {
       const trigger = getTrigger();
       fireEvent.focusIn(trigger);
 
-      const tip = screen.getByRole("tooltip");
-      expect(tip).toHaveStyle({
-        bottom: "100%",
-        top: "auto",
-        left: "-15px",
-        opacity: "1",
+      await waitFor(() => {
+        const tip = screen.getByRole("tooltip");
+        expect(tip).toHaveStyle({
+          bottom: "100%",
+          top: "auto",
+          left: "-15px",
+          opacity: "1",
+        });
       });
     });
 
-    it("flips the tooltip below the trigger when space above is insufficient", () => {
+    it("flips the tooltip below the trigger when space above is insufficient", async () => {
       mockMeasurements(
         { top: 20, left: 200, width: 50, height: 20 },
         { width: 80, height: 30 }
@@ -194,16 +196,18 @@ describe("Tooltip", () => {
       const trigger = getTrigger();
       fireEvent.focusIn(trigger);
 
-      const tip = screen.getByRole("tooltip");
-      expect(tip).toHaveStyle({
-        bottom: "auto",
-        top: "100%",
-        left: "-15px",
-        opacity: "1",
+      await waitFor(() => {
+        const tip = screen.getByRole("tooltip");
+        expect(tip).toHaveStyle({
+          bottom: "auto",
+          top: "100%",
+          left: "-15px",
+          opacity: "1",
+        });
       });
     });
 
-    it("clamps horizontal positioning to the left viewport boundary when overflowing left", () => {
+    it("clamps horizontal positioning to the left viewport boundary when overflowing left", async () => {
       mockMeasurements(
         { top: 100, left: 10, width: 50, height: 20 },
         { width: 80, height: 30 }
@@ -212,16 +216,18 @@ describe("Tooltip", () => {
       const trigger = getTrigger();
       fireEvent.focusIn(trigger);
 
-      const tip = screen.getByRole("tooltip");
-      expect(tip).toHaveStyle({
-        bottom: "100%",
-        top: "auto",
-        left: "-2px",
-        opacity: "1",
+      await waitFor(() => {
+        const tip = screen.getByRole("tooltip");
+        expect(tip).toHaveStyle({
+          bottom: "100%",
+          top: "auto",
+          left: "-2px",
+          opacity: "1",
+        });
       });
     });
 
-    it("clamps horizontal positioning to the right viewport boundary when overflowing right", () => {
+    it("clamps horizontal positioning to the right viewport boundary when overflowing right", async () => {
       mockMeasurements(
         { top: 100, left: 980, width: 50, height: 20 },
         { width: 80, height: 30 }
@@ -230,12 +236,14 @@ describe("Tooltip", () => {
       const trigger = getTrigger();
       fireEvent.focusIn(trigger);
 
-      const tip = screen.getByRole("tooltip");
-      expect(tip).toHaveStyle({
-        bottom: "100%",
-        top: "auto",
-        left: "-44px",
-        opacity: "1",
+      await waitFor(() => {
+        const tip = screen.getByRole("tooltip");
+        expect(tip).toHaveStyle({
+          bottom: "100%",
+          top: "auto",
+          left: "-44px",
+          opacity: "1",
+        });
       });
     });
   });

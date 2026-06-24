@@ -1,3 +1,7 @@
+jest.mock("../resolveApiBase", () => ({
+  resolveApiBase: jest.fn(() => "http://localhost:3001"),
+}));
+
 import {
   type ApiError,
   ApiTimeoutError,
@@ -368,7 +372,6 @@ describe("apiClient", () => {
               once: true,
             });
           }),
-      ),
     );
 
     const pending = apiFetch("/api/v1/slow", { timeoutMs: 50 });
