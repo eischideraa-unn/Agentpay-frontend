@@ -198,7 +198,8 @@ control:
 - `src/app/robots.ts` allows public crawling from `/` and explicitly
   disallows operator-only dashboard surfaces: `/admin`, `/api-keys`,
   `/webhooks`, and `/settings`.
-- Both metadata routes derive absolute URLs from
+- `src/app/manifest.ts` serves the PWA web app manifest with name, description, branding colors matching the dark/light palette in `src/app/globals.css`, and `favicon.ico` icon entry to enable installability as a PWA.
+- Both `sitemap.ts` and `robots.ts` derive absolute URLs from
   `NEXT_PUBLIC_AGENTPAY_SITE_ORIGIN`, defaulting to `http://localhost:3000` for
   local development rather than hard-coding a production domain.
 
