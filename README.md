@@ -90,6 +90,10 @@ agentpay-frontend/
     └── ci.yml                                    # CI: build, test
 ```
 
+## Route architecture
+
+For a detailed breakdown of each route's responsibility, render mode (server vs client), nested layout, and backend endpoints, see [docs/architecture.md](docs/architecture.md).
+
 ## Route map (frontend)
 
 Backend endpoints are taken from the companion documentation page `src/app/docs/page.tsx` and from the API client usage throughout `src/app/*`.
