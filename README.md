@@ -294,6 +294,8 @@ When rendering links:
 
 - Any external link rendered with `target="_blank"` must include `rel="noopener noreferrer"`.
 - Any `href` derived from backend/user data must be validated with `safeHref()` from `src/lib/url.ts`. Unsafe schemes like `javascript:` and `data:` are rejected.
+- Links on the `/docs` page (relative OpenAPI and external GitHub reference link) are validated through `safeHref()`, falling back to plain text if validation fails.
+
 ## Route map (frontend)
 
 | Path | Notes |
