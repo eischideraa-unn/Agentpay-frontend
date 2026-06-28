@@ -1,6 +1,23 @@
 import { render, screen, act, fireEvent, cleanup } from "@testing-library/react";
 import SettingsPage from "./page";
 
+const mockMatchMedia = (matches: boolean) => {
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    writable: true,
+    value: jest.fn().mockImplementation((query: string) => ({
+      matches,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+};
+
 function mockClipboard(writeText = jest.fn().mockResolvedValue(undefined)) {
   Object.defineProperty(navigator, "clipboard", {
     value: { writeText },
@@ -12,6 +29,7 @@ function mockClipboard(writeText = jest.fn().mockResolvedValue(undefined)) {
 beforeEach(() => {
   jest.useFakeTimers();
   mockClipboard();
+  mockMatchMedia(false);
 });
 
 afterEach(() => {
