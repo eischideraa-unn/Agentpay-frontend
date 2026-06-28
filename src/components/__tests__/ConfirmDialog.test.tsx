@@ -244,9 +244,10 @@ describe("ConfirmDialog", () => {
     render(<ConfirmDialogHarness dismissOnBackdrop={true} />);
 
     const { dialog } = openDialog();
-    const backdrop = dialog;
+    const backdrop = dialog.parentElement;
+    expect(backdrop).not.toBeNull();
 
-    fireEvent.mouseDown(dialog);
+    fireEvent.mouseDown(backdrop!);
 
     expect(screen.queryByRole("dialog", { name: /delete project/i })).not.toBeInTheDocument();
   });
@@ -264,4 +265,3 @@ describe("ConfirmDialog", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });
-
