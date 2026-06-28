@@ -58,6 +58,11 @@ export const messages = {
       heading: "Appearance",
       description: "Choose a colour scheme. System follows your OS preference.",
     },
+    connection: {
+      heading: "Connection",
+      description: "Resolved API base URL of the AgentPay backend.",
+      label: "API Base URL",
+    },
   },
 } as const;
 
