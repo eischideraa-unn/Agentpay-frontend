@@ -193,18 +193,22 @@ describe("DocsPage", () => {
 
   it("renders the OpenAPI JSON link", () => {
     render(<DocsPage />);
-    expect(
-      screen.getByRole("link", { name: /GET \/api\/v1\/openapi\.json/i }),
-    ).toHaveAttribute("href", "/api/v1/openapi.json");
+    const link = screen.getByRole("link", { name: /GET \/api\/v1\/openapi\.json/i });
+    expect(link).toHaveAttribute("href", "/api/v1/openapi.json");
+    expect(link).not.toHaveAttribute("target");
+    expect(link).not.toHaveAttribute("rel");
   });
 
   it("renders the dashboard API integration reference link", () => {
     render(<DocsPage />);
-    expect(
-      screen.getByRole("link", { name: /dashboard API integration reference/i }),
-    ).toHaveAttribute(
+    const link = screen.getByRole("link", {
+      name: /dashboard API integration reference/i,
+    });
+    expect(link).toHaveAttribute(
       "href",
       "https://github.com/Agentpay-Org/Agentpay-frontend/blob/main/docs/api-integration.md",
     );
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
 });
