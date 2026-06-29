@@ -54,6 +54,12 @@ const config: Config = {
       functions: 100,
       lines: 100,
     },
+    "./src/lib/url.ts": {
+      statements: 100,
+      branches: 100,
+      functions: 100,
+      lines: 100,
+    },
   },
   coverageReporters: ["text", "json-summary", "lcov"],
 };
