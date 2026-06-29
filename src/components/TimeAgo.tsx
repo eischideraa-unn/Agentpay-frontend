@@ -17,7 +17,7 @@ function format(deltaMs: number): string {
   return "just now";
 }
 
-export function TimeAgo({ ts }: { ts: number }) {
+export function TimeAgo({ ts, title }: { ts: number; title?: string }) {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 30_000);
@@ -25,7 +25,7 @@ export function TimeAgo({ ts }: { ts: number }) {
   }, []);
   const iso = new Date(ts).toISOString();
   return (
-    <time dateTime={iso} title={iso}>
+    <time dateTime={iso} title={title ?? iso}>
       {format(now - ts)}
     </time>
   );

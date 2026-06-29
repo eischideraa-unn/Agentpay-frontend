@@ -115,7 +115,7 @@ Backend endpoints are taken from the companion documentation page `src/app/docs/
 | `/settings`                   | User/app settings                            | _(calls settings endpoints in code)_                                                                                                              |
 | `/stats`                      | Statistics                                   | _(calls stats endpoints in code)_                                                                                                                 |
 | `/usage`                      | Usage totals & settlement workflow           | `POST /api/v1/usage`, `GET /api/v1/usage/:agent/:serviceId`, `POST /api/v1/settle`                                                                |
-| `/webhooks`                   | Webhooks management                          | _(calls webhooks endpoints in code)_                                                                                                              |
+| `/webhooks`                   | Webhooks management                          | _(calls webhooks endpoints in code)_ and displays each webhook registration time relatively with an absolute timestamp tooltip                    |
 
 ## Shared components
 
