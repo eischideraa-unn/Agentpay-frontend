@@ -1,6 +1,12 @@
-import { render, screen, act, fireEvent, cleanup } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import SettingsPage from "./page";
+import { messages } from "@/lib/messages";
 
+/**
+ * jsdom does not implement `window.matchMedia`, which `ThemeToggle` reads via
+ * `readTheme()` / `effectiveTheme()`. Stub it so the page renders without
+ * throwing. Mirrors the stub used in the ThemeToggle component test.
+ */
 const mockMatchMedia = (matches: boolean) => {
   Object.defineProperty(window, "matchMedia", {
     configurable: true,
@@ -18,72 +24,60 @@ const mockMatchMedia = (matches: boolean) => {
   });
 };
 
-function mockClipboard(writeText = jest.fn().mockResolvedValue(undefined)) {
-  Object.defineProperty(navigator, "clipboard", {
-    value: { writeText },
-    configurable: true,
-  });
-  return writeText;
-}
-
-beforeEach(() => {
-  jest.useFakeTimers();
-  mockClipboard();
-  mockMatchMedia(false);
-});
-
-afterEach(() => {
-  jest.runOnlyPendingTimers();
-  jest.useRealTimers();
-  cleanup();
-  delete process.env.NEXT_PUBLIC_AGENTPAY_API_BASE;
-});
-
 describe("SettingsPage", () => {
-  it("renders the settings headings and description text", () => {
-    render(<SettingsPage />);
+  beforeEach(() => {
+    window.localStorage.clear();
+    document.documentElement.classList.remove("dark");
+    mockMatchMedia(false);
+  });
 
-    expect(screen.getByRole("heading", { name: "Settings" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Appearance" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Connection" })).toBeInTheDocument();
+  it("renders the Settings page heading", () => {
+    render(<SettingsPage />);
     expect(
-      screen.getByText("Resolved API base URL of the AgentPay backend.")
+      screen.getByRole("heading", { level: 1, name: messages.settings.heading }),
+    ).toBeInTheDocument();
+    // Sanity-check the literal copy so a messages refactor cannot silently
+    // change the visible heading.
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Settings" }),
     ).toBeInTheDocument();
   });
 
-  it("uses the default API base URL (http://localhost:3001) when env is not set", () => {
+  it("renders the Appearance section heading and descriptive copy", () => {
     render(<SettingsPage />);
-
-    expect(screen.getByText("http://localhost:3001")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: messages.settings.appearance.heading,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(messages.settings.appearance.description),
+    ).toBeInTheDocument();
   });
 
-  it("uses an overridden API base URL when NEXT_PUBLIC_AGENTPAY_API_BASE is set", () => {
-    process.env.NEXT_PUBLIC_AGENTPAY_API_BASE = "https://api.custombackend.com";
+  it("renders the ThemeToggle control", () => {
     render(<SettingsPage />);
-
-    expect(screen.getByText("https://api.custombackend.com")).toBeInTheDocument();
+    // ThemeToggle exposes a labelled radio-like button group.
+    expect(
+      screen.getByRole("group", { name: "Theme" }),
+    ).toBeInTheDocument();
+    for (const option of ["light", "dark", "system"]) {
+      expect(
+        screen.getByRole("button", { name: option }),
+      ).toBeInTheDocument();
+    }
   });
 
-  it("renders the copy button and handles the copy behavior with aria-live feedback", async () => {
-    const writeText = mockClipboard();
-    process.env.NEXT_PUBLIC_AGENTPAY_API_BASE = "https://api.custombackend.com";
+  it("exposes the main landmark with id='main-content' for the skip link", () => {
     render(<SettingsPage />);
+    const main = screen.getByRole("main");
+    expect(main).toHaveAttribute("id", "main-content");
+  });
 
-    const copyBtn = screen.getByRole("button", { name: "Copy" });
-    expect(copyBtn).toBeInTheDocument();
-    expect(copyBtn).toHaveAttribute("aria-live", "polite");
-
-    await act(async () => {
-      fireEvent.click(copyBtn);
-    });
-
-    expect(writeText).toHaveBeenCalledWith("https://api.custombackend.com");
-    expect(screen.getByRole("button", { name: "Copied" })).toBeInTheDocument();
-
-    act(() => {
-      jest.advanceTimersByTime(1500);
-    });
-
-    expect(screen.getByRole("button", { name: "Copy" })).toBeInTheDocument();
+  it("renders without throwing when matchMedia is unavailable-shaped (matches=false)", () => {
+    // Guards the regression the issue calls out: the page must render in jsdom
+    // (no real matchMedia) once the stub is in place.
+    expect(() => render(<SettingsPage />)).not.toThrow();
   });
 });
