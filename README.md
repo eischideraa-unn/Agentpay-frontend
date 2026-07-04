@@ -137,6 +137,12 @@ See [docs/hooks.md](docs/hooks.md) for the shared hook reference, including
 signatures, return shapes, cancellation and SSR notes, and usage examples for
 the hooks in `src/lib`.
 
+The stats page uses `usePolling("/api/v1/stats", 5000)` for its five-second
+refresh loop, and the admin page uses the same hook for
+`/api/v1/admin/status`. Interval cleanup, stale-response guards, action-triggered
+refreshes, and error recovery stay in one shared hook instead of being
+reimplemented in route code.
+
 The agent detail route uses `useApi` for its primary usage request, keyed by the
 URL-encoded agent identifier. Navigating between agents aborts the superseded
 usage request and ignores any stale completion. Its optional lifetime-total
