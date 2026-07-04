@@ -76,6 +76,10 @@ describe("safeStringify", () => {
     expect(result).toContain("[BigInt:10]");
   });
 
+  it("replaces bigint values inside arrays", () => {
+    expect(safeStringify([BigInt(7)])).toContain("[BigInt:7]");
+  });
+
   it("replaces functions and undefined leaves with safe markers", () => {
     const result = safeStringify({ fn: () => undefined, missing: undefined });
     expect(result).toContain("[Function]");
@@ -95,6 +99,18 @@ describe("safeStringify", () => {
     const small = { hi: 1 };
     const result = safeStringify(small);
     expect(result.endsWith(EVENT_PAYLOAD_TRUNCATED_MARKER.trim())).toBe(false);
+  });
+
+  it("respects a custom maxChars value when truncating", () => {
+    const result = safeStringify({ data: "abcdef" }, 10);
+    expect(result.length).toBe(10 + EVENT_PAYLOAD_TRUNCATED_MARKER.length);
+    expect(result).toContain(EVENT_PAYLOAD_TRUNCATED_MARKER.trim());
+  });
+
+  it("does not truncate a payload exactly at the limit", () => {
+    const payload = { status: "ok" };
+    const serialised = JSON.stringify(payload, null, 2);
+    expect(safeStringify(payload, serialised.length)).toBe(serialised);
   });
 
   it("falls back to a sentinel string instead of throwing if stringify explodes", () => {
@@ -126,6 +142,10 @@ describe("safeFormatTimestamp", () => {
     expect(safeFormatTimestamp("not a date")).toBe("—");
     expect(safeFormatTimestamp(undefined)).toBe("—");
     expect(safeFormatTimestamp(null)).toBe("—");
+  });
+
+  it("falls back for dashed non-date strings", () => {
+    expect(safeFormatTimestamp("not-a-date", "fallback")).toBe("fallback");
   });
 
   it("honours a custom fallback string", () => {
