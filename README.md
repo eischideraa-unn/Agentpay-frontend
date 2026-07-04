@@ -220,13 +220,18 @@ to screen readers after the debounced query settles. This ensures assistive-tech
 users receive feedback about result counts without focus being stolen from the search
 input. The announcement format is:
 - "N results for 'query'" for one or more matches
-- "No matches for 'query'" when the search returns zero results or fails
+- "No matches for 'query'" when the search returns zero results
 - No announcement for empty queries
 
 The live region coordinates with the 250ms debounce timing to avoid spamming announcements
 on every keystroke. The region is marked with `aria-atomic="true"` and uses the `sr-only`
 class for visual hiding. This implementation satisfies
 [WCAG 4.1.3 Status Messages](https://www.w3.org/WAI/WCAG21/Understanding/status-messages.html).
+While the debounce window or backend request is pending, the page shows the shared
+`Spinner` with a visible "Searching..." status. Requests include an `AbortSignal`
+and a latest-input guard so out-of-order responses cannot replace newer results.
+Backend errors are shown in a `role="alert"` message instead of being reported as
+an empty result set.
 Behaviour is covered by [`src/app/search/page.test.tsx`](src/app/search/page.test.tsx).
 
 ## API integration
