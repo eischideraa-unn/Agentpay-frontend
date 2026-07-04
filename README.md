@@ -125,6 +125,10 @@ Backend endpoints are taken from the companion documentation page `src/app/docs/
 
 The `/api-keys` page lists each key label, prefix, and created-at age with the absolute ISO timestamp available on hover. If the account has no keys, the page renders a clear "No API keys yet" empty state instead of an empty list while preserving the create, reveal-once, copy, and revoke confirmation flows.
 
+### Export page notes
+
+The `/export` page builds JSON and CSV export requests from the resolved API base URL. Downloads are fetched as blobs so the UI can disable both buttons during an in-flight request, show the shared `Spinner` with a "Preparing export" status, trigger the browser download with the response filename, show a success toast, and surface backend failures in a `role="alert"` message.
+
 ## Shared components
 
 See [docs/components.md](docs/components.md) for the shared component catalog,
