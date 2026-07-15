@@ -121,6 +121,13 @@ Backend endpoints are taken from the companion documentation page `src/app/docs/
 | `/usage`                      | Usage totals & settlement workflow           | `POST /api/v1/usage`, `GET /api/v1/usage/:agent/:serviceId`, `POST /api/v1/settle`                                                                |
 | `/webhooks`                   | Webhooks management                          | _(calls webhooks endpoints in code)_ and displays each webhook registration time relatively with an absolute timestamp tooltip                    |
 
+### Usage identifier validation
+
+The `/usage` record and query forms trim the agent and service identifiers before
+submission. Identifiers must be 1-128 characters and may only contain letters,
+numbers, dots, underscores, hyphens, and colons. Query requests still URL-encode
+the validated identifiers before placing them in the path.
+
 ### API keys page notes
 
 The `/api-keys` page lists each key label, prefix, and created-at age with the absolute ISO timestamp available on hover. If the account has no keys, the page renders a clear "No API keys yet" empty state instead of an empty list while preserving the create, reveal-once, copy, and revoke confirmation flows.
