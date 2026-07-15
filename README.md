@@ -470,6 +470,14 @@ The `/agents` page lists every agent identity seen by the backend, paginated wit
 - Backend errors are surfaced as a `role="alert"` paragraph; the pagination bar is suppressed while an error is shown.
 - The single-agent view (`/agents/:agent`) utilizes a semantic `<Breadcrumb>` trail for accessible orientation.
 
+## Service top-agents paging
+
+The `/services/:serviceId/agents` page requests top agents with `page` and
+`limit=25`, shows the shared `Spinner` while each page is loading, renders
+`EmptyState` when no agents are returned, and uses the shared `Pagination`
+component so the `aria-live` page indicator announces page changes. Agent rows
+link to `/agents/:agent` with the agent identifier encoded.
+
 ## Commands
 
 | Command                 | Description                                              |
