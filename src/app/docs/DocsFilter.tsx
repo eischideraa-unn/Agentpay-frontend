@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { CurlBlock } from "@/components/CurlBlock";
 import { EmptyState } from "@/components/EmptyState";
@@ -17,8 +17,19 @@ export function DocsFilter({ sections }: { sections: ApiSection[] }) {
       s.p.toLowerCase().includes(debouncedQuery.toLowerCase())
   );
 
+  const announcement = useMemo(() => {
+    if (!debouncedQuery) return "";
+    const count = filteredSections.length;
+    return count === 0
+      ? `No matches for "${debouncedQuery}"`
+      : `${count} result${count === 1 ? "" : "s"} for "${debouncedQuery}"`;
+  }, [debouncedQuery, filteredSections.length]);
+
   return (
     <>
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {announcement}
+      </div>
       <SearchBar
         value={query}
         onChange={setQuery}
